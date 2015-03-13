@@ -1,27 +1,36 @@
-package com.mygdx.game;
+
+/*
+ * @Author Juan Manuel Lozano
+ * Class which manage the game.
+ * 
+ */
+
+package com.dreik.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.dreik.hud.PlayerHud;
 
 public class GdxGame extends ApplicationAdapter {
 	
 	public static GdxGame instance = new GdxGame();
 	
-	public static Solitario solitario;
+	public static Senku solitario;
 	private Drawable ballImage;
 	
 	public static final int SPACING = 80;
 	public static final int globalX = 130;
 	public static final int globalY = 20;
 	public Stage stage;
+	PlayerHud playerHud;
 	
 	public Ball selectedBall;
 	public Ball newPosition;
@@ -42,9 +51,13 @@ public class GdxGame extends ApplicationAdapter {
 	}
 	
 	private void initialize() {
-		ballImage = new TextureRegionDrawable(new TextureRegion(new Texture("ball.png")));
-		solitario = new Solitario();
+		Texture texBall = new Texture("ball.png");
+		texBall.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		ballImage = new TextureRegionDrawable(new TextureRegion(texBall));
+		solitario = new Senku();
 		stage = new Stage(new StretchViewport(800, 600));
+		playerHud = new PlayerHud(stage);
+		playerHud.load();
 		Gdx.input.setInputProcessor(stage);
 		
 	}
@@ -63,6 +76,7 @@ public class GdxGame extends ApplicationAdapter {
 					stage.addActor(new Ball(ballImage, x * SPACING + globalX, y * SPACING + globalY, false));
 			}
 		}
+		playerHud.load();
 		if(count == 1)
 			finish();
 	}

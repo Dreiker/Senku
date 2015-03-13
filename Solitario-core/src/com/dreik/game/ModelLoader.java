@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.dreik.game;
 
 public class ModelLoader {
 	

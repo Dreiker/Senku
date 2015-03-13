@@ -1,12 +1,23 @@
-package com.mygdx.game;
+package com.dreik.game;
 
-public class Solitario {
+import java.util.Stack;
+
+import com.badlogic.gdx.math.Vector2;
+
+class HistorialEntry {
+	public Vector2 prevPosition = new Vector2();
+	public Vector2 newPosition = new Vector2();
+	public Vector2 middlePosition = new Vector2();
+}
+
+public class Senku {
     
     private final int SIZE = 7;
+    private Stack<HistorialEntry> historial = new Stack<HistorialEntry>();
     
     String board[][] = new String[SIZE][SIZE];
     
-    public Solitario() {
+    public Senku() {
         createBoard();
     }
     
@@ -37,22 +48,46 @@ public class Solitario {
                 board[x][y] = " .";
             	board[x-1][newY] = " .";
                 board[newX][newY] = " *";
+                
+                HistorialEntry entry = new HistorialEntry();
+                entry.prevPosition.add(x,y);
+                entry.newPosition.add(x-1, newY);
+                entry.middlePosition.add(newX, newY);
+                historial.push(entry);
             }
 
             if(x - newX == -2 && y == newY && board[x+1][newY].equals(" *")) {
                 board[x][y] = " .";
             	board[x+1][newY] = " .";
                 board[newX][newY] = " *";
+                
+                HistorialEntry entry = new HistorialEntry();
+                entry.prevPosition.add(x,y);
+                entry.newPosition.add(x+1, newY);
+                entry.middlePosition.add(newX, newY);
+                historial.push(entry);
             }
             if(y - newY == -2 && x == newX && board[x][newY-1].equals(" *")) {
                 board[x][y] = " .";
             	board[newX][y+1] = " .";
                 board[newX][newY] = " *";
+                
+                HistorialEntry entry = new HistorialEntry();
+                entry.prevPosition.add(x,y);
+                entry.newPosition.add(newX, y+1);
+                entry.middlePosition.add(newX, newY);
+                historial.push(entry);
             }
             if(y - newY == 2 && x == newX && board[x][newY+1].equals(" *")) {
                 board[x][y] = " .";
             	board[newX][y-1] = " .";
                 board[newX][newY] = " *";
+                
+                HistorialEntry entry = new HistorialEntry();
+                entry.prevPosition.add(x,y);
+                entry.newPosition.add(newX, y-1);
+                entry.middlePosition.add(newX, newY);
+                historial.push(entry);
             }
             
         }
@@ -74,10 +109,11 @@ public class Solitario {
         System.out.println(auxString);
     }
     
-//    public static void main(String[] args) {
-//        Solitario solitario = new Solitario();
-//        solitario.moveToPosition(5, 3, 3, 3);
-//        solitario.showBoard();
-//    }
+    public void back() {
+    	board[(int) historial.peek().prevPosition.x][(int) historial.peek().prevPosition.y] = " *";
+    	board[(int) historial.peek().newPosition.x][(int) historial.peek().newPosition.y] = " .";
+    	board[(int) historial.peek().middlePosition.x][(int) historial.peek().middlePosition.y] = " *";
+    	historial.pop();
+    }
     
 }
