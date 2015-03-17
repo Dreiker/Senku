@@ -23,7 +23,8 @@ public class GdxGame extends ApplicationAdapter {
 	
 	public static GdxGame instance = new GdxGame();
 	
-	public static Senku solitario;
+	public static Senku senku;
+	public static XMLHistoric xmlHistoric; 
 	private Drawable ballImage;
 	
 	public static final int SPACING = 80;
@@ -51,10 +52,11 @@ public class GdxGame extends ApplicationAdapter {
 	}
 	
 	private void initialize() {
+		xmlHistoric = new XMLHistoric();
 		Texture texBall = new Texture("ball.png");
 		texBall.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		ballImage = new TextureRegionDrawable(new TextureRegion(texBall));
-		solitario = new Senku();
+		senku = new Senku();
 		stage = new Stage(new StretchViewport(800, 600));
 		playerHud = new PlayerHud(stage);
 		playerHud.load();
@@ -64,15 +66,15 @@ public class GdxGame extends ApplicationAdapter {
 	
 	public void updateBoard() {
 		int count = 0;
-		for (int y = 0; y < solitario.getBoard().length; y++) {
-			for (int x = 0; x < solitario.getBoard().length; x++) {
-				if(solitario.getBoard()[x][y].equals(" *")) {
+		for (int y = 0; y < senku.getBoard().length; y++) {
+			for (int x = 0; x < senku.getBoard().length; x++) {
+				if(senku.getBoard()[x][y].equals(" *")) {
 					stage.addActor(new Ball(ballImage, x * SPACING + globalX, y * SPACING + globalY));
 					count++;
 				}
 
 
-				else if (solitario.getBoard()[x][y].equals(" .")) 
+				else if (senku.getBoard()[x][y].equals(" .")) 
 					stage.addActor(new Ball(ballImage, x * SPACING + globalX, y * SPACING + globalY, false));
 			}
 		}

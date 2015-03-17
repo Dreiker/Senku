@@ -13,7 +13,7 @@ class HistorialEntry {
 public class Senku {
     
     private final int SIZE = 7;
-    private Stack<HistorialEntry> historial = new Stack<HistorialEntry>();
+    private Stack<HistorialEntry> historic = new Stack<HistorialEntry>();
     
     String board[][] = new String[SIZE][SIZE];
     
@@ -43,53 +43,56 @@ public class Senku {
     }
     
     public void moveToPosition(int x, int y, int newX, int newY) {
-        if(board[newX][newY].equals(" .")) {
-            if(x - newX == 2 && y == newY && board[x-1][newY].equals(" *")) {
+        if(isEmptySpace(newX, newY)) {
+            if(isLeftMovement(x, y, newX, newY)) {
                 board[x][y] = " .";
             	board[x-1][newY] = " .";
                 board[newX][newY] = " *";
                 
                 HistorialEntry entry = new HistorialEntry();
                 entry.prevPosition.add(x,y);
-                entry.newPosition.add(x-1, newY);
-                entry.middlePosition.add(newX, newY);
-                historial.push(entry);
+                entry.middlePosition.add(x-1, newY);
+                entry.newPosition.add(newX, newY);
+                historic.push(entry);
+                GdxGame.xmlHistoric.addMove(newX, newY);
             }
 
-            if(x - newX == -2 && y == newY && board[x+1][newY].equals(" *")) {
+            if(isRightMovement(x, y, newX, newY)) {
                 board[x][y] = " .";
             	board[x+1][newY] = " .";
                 board[newX][newY] = " *";
                 
                 HistorialEntry entry = new HistorialEntry();
                 entry.prevPosition.add(x,y);
-                entry.newPosition.add(x+1, newY);
-                entry.middlePosition.add(newX, newY);
-                historial.push(entry);
+                entry.middlePosition.add(x+1, newY);
+                entry.newPosition.add(newX, newY);
+                historic.push(entry);
+                GdxGame.xmlHistoric.addMove(newX, newY);
             }
-            if(y - newY == -2 && x == newX && board[x][newY-1].equals(" *")) {
+            if(isUpMovement(x, y, newX, newY)) {
                 board[x][y] = " .";
             	board[newX][y+1] = " .";
                 board[newX][newY] = " *";
                 
                 HistorialEntry entry = new HistorialEntry();
                 entry.prevPosition.add(x,y);
-                entry.newPosition.add(newX, y+1);
-                entry.middlePosition.add(newX, newY);
-                historial.push(entry);
+                entry.middlePosition.add(newX, y+1);
+                entry.newPosition.add(newX, newY);
+                historic.push(entry);
+                GdxGame.xmlHistoric.addMove(newX, newY);
             }
-            if(y - newY == 2 && x == newX && board[x][newY+1].equals(" *")) {
+            if(isDownMovement(x, y, newX, newY)) {
                 board[x][y] = " .";
             	board[newX][y-1] = " .";
                 board[newX][newY] = " *";
                 
                 HistorialEntry entry = new HistorialEntry();
                 entry.prevPosition.add(x,y);
-                entry.newPosition.add(newX, y-1);
-                entry.middlePosition.add(newX, newY);
-                historial.push(entry);
+                entry.middlePosition.add(newX, y-1);
+                entry.newPosition.add(newX, newY);
+                historic.push(entry);
+                GdxGame.xmlHistoric.addMove(newX, newY);
             }
-            
         }
 
     }
@@ -110,10 +113,34 @@ public class Senku {
     }
     
     public void back() {
-    	board[(int) historial.peek().prevPosition.x][(int) historial.peek().prevPosition.y] = " *";
-    	board[(int) historial.peek().newPosition.x][(int) historial.peek().newPosition.y] = " .";
-    	board[(int) historial.peek().middlePosition.x][(int) historial.peek().middlePosition.y] = " *";
-    	historial.pop();
+    	if(!historic.isEmpty()) {
+        	board[(int) historic.peek().prevPosition.x][(int) historic.peek().prevPosition.y] = " *";
+        	board[(int) historic.peek().newPosition.x][(int) historic.peek().newPosition.y] = " .";
+        	board[(int) historic.peek().middlePosition.x][(int) historic.peek().middlePosition.y] = " *";
+        	historic.pop();
+        	GdxGame.instance.removeBoard();
+        	GdxGame.instance.updateBoard();
+    	}
+    }
+    
+    private boolean isRightMovement(int x, int y, int newX, int newY) {
+    	return x - newX == -2 && y == newY && board[x+1][newY].equals(" *");
+    }
+    
+    private boolean isLeftMovement(int x, int y, int newX, int newY) {
+    	return x - newX == 2 && y == newY && board[x-1][newY].equals(" *");
+    }
+    
+    private boolean isDownMovement(int x, int y, int newX, int newY) {
+    	return y - newY == -2 && x == newX && board[x][newY-1].equals(" *");
+    }
+    
+    private boolean isUpMovement(int x, int y, int newX, int newY) {
+    	return y - newY == 2 && x == newX && board[x][newY+1].equals(" *");
+    }
+    
+    private boolean isEmptySpace(int newX, int newY) {
+    	return board[newX][newY].equals(" .");
     }
     
 }

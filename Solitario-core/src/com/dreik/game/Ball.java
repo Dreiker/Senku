@@ -52,7 +52,7 @@ public class Ball extends ImageButton{
 					GdxGame.instance.selectedBall = ball;
 				else if(GdxGame.instance.newPosition == null) {
 					GdxGame.instance.newPosition = ball;
-					GdxGame.solitario.moveToPosition(
+					GdxGame.senku.moveToPosition(
 							GdxGame.instance.selectedBall.getTableX() - 1,
 							GdxGame.instance.selectedBall.getTableY(),
 							GdxGame.instance.newPosition.getTableX() - 1,
